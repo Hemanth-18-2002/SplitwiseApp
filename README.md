@@ -48,3 +48,12 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 - This project is a simplified clone inspired by Splitwise.
 - Special thanks to the developers of Splitwise for their innovative expense-sharing platform.
+
+##App Screenshots
+
+![image](https://github.com/Hemanth-18-2002/SplitwiseApp/assets/83938737/f72e05c9-99ab-4ea3-a196-6031bdfc694d)
+![image](https://github.com/Hemanth-18-2002/SplitwiseApp/assets/83938737/1e593703-e122-48e2-a514-0280badf8af8)
+![image](https://github.com/Hemanth-18-2002/SplitwiseApp/assets/83938737/4f3b4e7e-250c-428f-925e-f4e53157f1ec)
+
+
+
