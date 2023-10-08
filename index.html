@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitwise Clone</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('extension-og.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        div {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(5, 1, 3, 0.2);
+        }
+
+        /* Additional styling for user list */
+        #userList {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #userList:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #userList h2 {
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+	.userExpensesList {
+            list-style: none;
+            padding: 0;
+        }
+
+        .userExpensesItem {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body bgcolor='skyblue'>
+    <h1 style="color:Tomato;">Splitwise App</h1>
+
+    <!-- User registration form -->
+    <div>
+        <h2>Add Members</h2>
+        <label for="username">Member Name:</label>
+        <input type="text" id="username">
+        <button id="registerUser">ADD</button>
+    </div>
+    <div id="userList">
+        <h2>Members</h2>
+        <ul id="registeredUsers">
+            <!-- Registered users will be dynamically added here -->
+        </ul>
+    </div>
+
+    <!-- Form to add an expense -->
+    <div>
+        <h2>Add an Expense</h2>
+        <label for="description">Description:</label>
+        <input type="text" id="description">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount">
+        <label for="users">Users:</label>
+        <input type="text" id="users" placeholder="Enter usernames separated by commas">
+        <button id="addExpense">Add Expense</button>
+    </div>
+     <!-- Display user expenses -->
+    <div id="userExpenses">
+        <h2>Member Expenses</h2>
+        <ul class="userExpensesList" id="userExpensesList">
+            <!-- User expenses will be dynamically added here -->
+        </ul>
+    </div>
+
+    <!-- List of expenses -->
+    <div>
+        <h2>Total Expenses</h2>
+        <ul id="expenseList">
+            <!-- Expense items will be dynamically added here -->
+        </ul>
+    </div>
+
+    <!-- JavaScript to handle users and expenses -->
+    <script>
+        const expenseList = document.getElementById("expenseList");
+        const descriptionInput = document.getElementById("description");
+        const amountInput = document.getElementById("amount");
+        const usersInput = document.getElementById("users");
+        const addExpenseButton = document.getElementById("addExpense");
+        const usernameInput = document.getElementById("username");
+        const registerUserButton = document.getElementById("registerUser"); 
+	const registeredUsersList = document.getElementById("registeredUsers");
+	 const userExpensesList = document.getElementById("userExpensesList");
+
+
+        const users = new Map(); // In-memory storage for users and expenses
+
+        registerUserButton.addEventListener("click", function () {
+            const username = usernameInput.value;
+
+            if (!username) {
+                alert("Please enter a valid username.");
+                return;
+            }
+
+            if (users.has(username)) {
+                alert("Username already exists.");
+                return;
+            }
+
+            users.set(username, { name: username, balance: 0 });
+	    const userItem = document.createElement("li");
+            userItem.textContent = username;
+            registeredUsersList.appendChild(userItem);
+
+  
+            usernameInput.value = '';
+        });
+
+        addExpenseButton.addEventListener("click", function () {
+            const description = descriptionInput.value;
+            const amount = parseFloat(amountInput.value);
+            const userNames = usersInput.value.split(',').map(name => name.trim());
+
+            if (!description || isNaN(amount) || userNames.length === 0) {
+                alert("Please enter valid description, amount, and users.");
+                return;
+            }
+
+            const sharedAmount = amount / userNames.length;
+
+            for (const userName of userNames) {
+                if (!users.has(userName)) {
+                    alert(`User '${userName}' does not exist.`);
+                    return;
+                }
+                users.get(userName).balance += sharedAmount;
+            }
+             for (const userName of userNames) {
+                const user = users.get(userName);
+                const balanceText = user.balance.toFixed(2);
+
+                // Create an element to display user expenses
+                const userExpensesItem = document.createElement("li");
+                userExpensesItem.classList.add("userExpensesItem");
+                userExpensesItem.textContent = `${userName}: $${balanceText}`;
+                userExpensesList.appendChild(userExpensesItem);
+            }
+
+            const expenseItem = document.createElement("li");
+            expenseItem.textContent = `${description} - $${amount.toFixed(2)} (${userNames.join(', ')})`;
+            expenseList.appendChild(expenseItem);
+
+            // Update user balances (owe or owed)
+            for (const userName of userNames) {
+                const user = users.get(userName);
+                const balanceText = user.balance.toFixed(2);
+                alert(`${userName} now owes $${balanceText}`);
+            }
+
+            descriptionInput.value = '';
+            amountInput.value = '';
+            usersInput.value = '';
+        });
+    </script>
+</body>
+</html>
